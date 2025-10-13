@@ -42,64 +42,15 @@ func (b *Board) UndoMove(column int) {
 	}
 }
 
-
-func (b Board) Evaluate() int {
-	if b.checkWin(1) {
-		return 1000
-	} else if b.checkWin(2) {
-		return -1000
-	}
-	score := 0
-	score += b.countPotentialSequences(1, 2) * 10
-	score += b.countPotentialSequences(1, 3) * 50
-	score -= b.countPotentialSequences(2, 2) * 10
-	score -= b.countPotentialSequences(2, 3) * 50
-
-	return score
+func (b *Board) CheckWin(player int) bool {
+	return countPotentialSequences(b, player, 4) > 0
 }
 
-func (b *Board) checkWin(player int) bool {
-	return b.countPotentialSequences(player, 4) > 0
-}
-
-func (b *Board) countPotentialSequences(player, n int) int {
-	count := 0
-	directions := [][2]int{
-		{0, 1},  // horizontal
-		{1, 0},  // vertical
-		{1, 1},  // diagonal \
-		{-1, 1}, // diagonal /
-	}
-
-	for row := range b.Grid {
-		for col := range b.Grid[row] {
-			for _, dir := range directions {
-				dx, dy := dir[0], dir[1]
-				seq := []int{}
-				for k := range make([]int, n) { // loop moderno
-					x, y := row+k*dx, col+k*dy
-					if x < 0 || x >= 6 || y < 0 || y >= 7 {
-						break
-					}
-					seq = append(seq, b.Grid[x][y])
-				}
-				if len(seq) == n && b.isSequenceOpen(seq, player) {
-					count++
-				}
-			}
-		}
-	}
-	return count
-}
-
-func (b *Board) isSequenceOpen(seq []int, player int) bool {
-	for _, v := range seq {
-		if v != player { 
+func (b *Board) IsFull() bool {
+	for col := 0; col < 7; col++ {
+		if b.Grid[0][col] == 0 { // Se a primeira linha (topo) tem espaço vazio
 			return false
 		}
 	}
 	return true
 }
-
-
-
