@@ -1,5 +1,7 @@
 package game
 
+import "math"
+
 func Minimax(board *Board, depth int, isMaximizing bool) int {
 	var bestScore int
 
@@ -7,9 +9,9 @@ func Minimax(board *Board, depth int, isMaximizing bool) int {
 		return board.Evaluate()
 	}
 	if isMaximizing{
-		bestScore = -1000
+		bestScore = math.MinInt
 		for col := range 7 {
-			if board.MakeMove(col){
+			if board.MakeMove(col, 1){
 				score := Minimax(board, depth-1, false)
 				board.UndoMove(col)
 				if score > bestScore {
@@ -19,9 +21,9 @@ func Minimax(board *Board, depth int, isMaximizing bool) int {
 		}
 		return bestScore
 	}
-	bestScore = 1000
+	bestScore = math.MaxInt
 	for col := range 7{
-		if board.MakeMove(col){
+		if board.MakeMove(col, 2){
 			score := Minimax(board, depth-1, true)
 			board.UndoMove(col)
 			if score < bestScore {
