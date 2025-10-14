@@ -1,69 +1,62 @@
 package game
 
-// EvaluateSimple - Heurística simples para nível iniciante
 func EvaluateSimple(b *Board) int {
-	if b.CheckWin(1) {
+	if b.CheckWin(2) { // IA venceu
 		return 1000
 	}
-	if b.CheckWin(2) {
+	if b.CheckWin(1) { // Humano venceu
 		return -1000
 	}
 
 	score := 0
-	// Heurística simples: só sequências de 2
-	score += countPotentialSequences(b, 1, 2) * 10
-	score -= countPotentialSequences(b, 2, 2) * 10
+	score += countPotentialSequences(b, 2, 2) * 10  // IA
+	score -= countPotentialSequences(b, 1, 2) * 10  // Humano
 
 	return score
 }
 
-// EvaluateIntermediate - Heurística intermediária
 func EvaluateIntermediate(b *Board) int {
-	if b.CheckWin(1) {
+	if b.CheckWin(2) { // IA venceu
 		return 1000
 	}
-	if b.CheckWin(2) {
+	if b.CheckWin(1) { // Humano venceu
 		return -1000
 	}
 
 	score := 0
-	// Sequências de 2 e 3 peças (ponderação)
-	score += countPotentialSequences(b, 1, 2) * 10
-	score += countPotentialSequences(b, 1, 3) * 50
-	score -= countPotentialSequences(b, 2, 2) * 10
-	score -= countPotentialSequences(b, 2, 3) * 50
+	score += countPotentialSequences(b, 2, 2) * 10   // IA - 2 peças
+	score += countPotentialSequences(b, 2, 3) * 50   // IA - 3 peças
+	score -= countPotentialSequences(b, 1, 2) * 10   // Humano - 2 peças
+	score -= countPotentialSequences(b, 1, 3) * 50   // Humano - 3 peças
 
 	return score
 }
 
-// EvaluateAdvanced - Heurística avançada para nível profissional
 func EvaluateAdvanced(b *Board) int {
-	if b.CheckWin(1) {
+	if b.CheckWin(2) { // IA venceu
 		return 1000
 	}
-	if b.CheckWin(2) {
+	if b.CheckWin(1) { // Humano venceu
 		return -1000
 	}
 
 	score := 0
 
-	// Sequências de 2 e 3 peças
-	score += countPotentialSequences(b, 1, 2) * 10
-	score += countPotentialSequences(b, 1, 3) * 50
-	score -= countPotentialSequences(b, 2, 2) * 10
-	score -= countPotentialSequences(b, 2, 3) * 50
+	score += countPotentialSequences(b, 2, 2) * 10   // IA - 2 peças
+	score += countPotentialSequences(b, 2, 3) * 100  // IA - 3 peças (mais crítico)
+	score -= countPotentialSequences(b, 1, 2) * 10   // Humano - 2 peças
+	score -= countPotentialSequences(b, 1, 3) * 100  // Humano - 3 peças (bloqueio crítico)
 
-	// Bonus por centralidade (colunas 2, 3, 4)
 	for row := 0; row < 6; row++ {
-		if b.Grid[row][3] == 1 {
-			score += 4 // Coluna central vale mais
-		} else if b.Grid[row][3] == 2 {
+		if b.Grid[row][3] == 2 { // IA na coluna central
+			score += 4
+		} else if b.Grid[row][3] == 1 { // Humano na coluna central
 			score -= 4
 		}
 
-		if b.Grid[row][2] == 1 || b.Grid[row][4] == 1 {
-			score += 2 // Colunas próximas ao centro
-		} else if b.Grid[row][2] == 2 || b.Grid[row][4] == 2 {
+		if b.Grid[row][2] == 2 || b.Grid[row][4] == 2 { // IA nas colunas próximas
+			score += 2
+		} else if b.Grid[row][2] == 1 || b.Grid[row][4] == 1 { // Humano nas colunas próximas
 			score -= 2
 		}
 	}
@@ -71,7 +64,6 @@ func EvaluateAdvanced(b *Board) int {
 	return score
 }
 
-// countPotentialSequences conta quantas sequências de tamanho n o jogador possui
 func countPotentialSequences(b *Board, player, n int) int {
 	count := 0
 	directions := [][2]int{
@@ -113,4 +105,3 @@ func isSequenceOpen(seq []int, player int) bool {
 	}
 	return true
 }
-
