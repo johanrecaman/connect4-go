@@ -46,7 +46,7 @@ func (m Model) viewPlaying() string {
 	s.WriteString("  ║     🎮 CONNECT FOUR - 6x7 🎮          ║\n")
 	s.WriteString("  ╚════════════════════════════════════════╝\n\n")
 
-	s.WriteString("     A   S   D   F   G   H   J\n")
+//	s.WriteString("     A   S   D   F   G   H   J\n")
 	s.WriteString("  ┌───┬───┬───┬───┬───┬───┬───┐\n")
 
 	for i := 0; i < 6; i++ {
@@ -69,7 +69,7 @@ func (m Model) viewPlaying() string {
 		}
 	}
 	s.WriteString("  └───┴───┴───┴───┴───┴───┴───┘\n")
-	s.WriteString("    0   1   2   3   4   5   6\n\n")
+	s.WriteString("    A   S   D   F   G   H   J\n\n")
 
 	s.WriteString(fmt.Sprintf("  %s\n\n", m.message))
 
