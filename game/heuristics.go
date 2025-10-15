@@ -9,8 +9,8 @@ func EvaluateSimple(b *Board) int {
 	}
 
 	score := 0
-	score += countPotentialSequences(b, 2, 2) * 10  // IA
-	score -= countPotentialSequences(b, 1, 2) * 10  // Humano
+	score += countPotentialSequences(b, 2, 2) * 10 // IA
+	score -= countPotentialSequences(b, 1, 2) * 10 // Humano
 
 	return score
 }
@@ -24,10 +24,10 @@ func EvaluateIntermediate(b *Board) int {
 	}
 
 	score := 0
-	score += countPotentialSequences(b, 2, 2) * 10   // IA - 2 peças
-	score += countPotentialSequences(b, 2, 3) * 50   // IA - 3 peças
-	score -= countPotentialSequences(b, 1, 2) * 10   // Humano - 2 peças
-	score -= countPotentialSequences(b, 1, 3) * 50   // Humano - 3 peças
+	score += countPotentialSequences(b, 2, 2) * 10 // IA - 2 peças
+	score += countPotentialSequences(b, 2, 3) * 50 // IA - 3 peças
+	score -= countPotentialSequences(b, 1, 2) * 10 // Humano - 2 peças
+	score -= countPotentialSequences(b, 1, 3) * 50 // Humano - 3 peças
 
 	return score
 }
@@ -42,10 +42,10 @@ func EvaluateAdvanced(b *Board) int {
 
 	score := 0
 
-	score += countPotentialSequences(b, 2, 2) * 10   // IA - 2 peças
-	score += countPotentialSequences(b, 2, 3) * 100  // IA - 3 peças (mais crítico)
-	score -= countPotentialSequences(b, 1, 2) * 10   // Humano - 2 peças
-	score -= countPotentialSequences(b, 1, 3) * 100  // Humano - 3 peças (bloqueio crítico)
+	score += countPotentialSequences(b, 2, 2) * 10  // IA - 2 peças
+	score += countPotentialSequences(b, 2, 3) * 100 // IA - 3 peças (mais crítico)
+	score -= countPotentialSequences(b, 1, 2) * 10  // Humano - 2 peças
+	score -= countPotentialSequences(b, 1, 3) * 100 // Humano - 3 peças (bloqueio crítico)
 
 	for row := 0; row < 6; row++ {
 		if b.Grid[row][3] == 2 { // IA na coluna central
@@ -96,12 +96,17 @@ func countPotentialSequences(b *Board, player, n int) int {
 	return count
 }
 
-// isSequenceOpen verifica se a sequência pertence ao jogador
 func isSequenceOpen(seq []int, player int) bool {
+	playerCount := 0
+	opponentCount := 0
+	opponent := 3 - player
+
 	for _, v := range seq {
-		if v != player {
-			return false
+		if v == player {
+			playerCount++
+		} else if v == opponent {
+			opponentCount++
 		}
 	}
-	return true
+	return playerCount > 0 && opponentCount == 0
 }
